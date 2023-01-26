@@ -9,9 +9,6 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import withStyles from '@material-ui/core/styles/withStyles';
 import palette from '../theme/palette';
-import Slider from '@material-ui/core/Slider';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const AntTabs = withStyles({
   root: {
@@ -80,19 +77,12 @@ const useStyles = makeStyles((theme) => ({
 const Toolbar = (props) => {
   const {
     className,
-    startDate,
-    setStartDate,
-    finishDate,
-    setFinishDate,
-    priceFilter,
-    setPriceFilter,
     statusFilter,
     setStatusFilter,
     tabs,
     ...rest
   } = props;
   const [tabValue, setTabValue] = React.useState(statusFilter);
-  const [rangeValue, rangeSetValue] = React.useState(priceFilter);
 
   const classes = useStyles();
 
@@ -100,23 +90,11 @@ const Toolbar = (props) => {
     setTabValue(value);
     setStatusFilter(value);
   };
-  const handleDateChange = (date) => {
-    setStartDate(date);
-  };
-  const handleDateChangeFinish = (date) => {
-    setFinishDate(date);
-  };
-  const handleChangeRange = (event, newValue) => {
-    rangeSetValue(newValue);
-  };
-  const setRangeFilter = (event, newValue) => {
-    setPriceFilter(newValue);
-  };
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
-      <Grid container spacing={4}>
-        <Grid item lg={3} sm={6} xl={3} xs={12} m={2}>
+      <Grid container>
+        <Grid item lg={4} sm={6} xl={3} xs={12} m={2}>
           <div className={classes}>
             <AntTabs value={tabValue} onChange={handleChangeTab} aria-label="ant example">
               {tabs.map((item) => (
@@ -126,7 +104,7 @@ const Toolbar = (props) => {
             <Typography className={classes.padding} />
           </div>
         </Grid>
-        <Grid className={classes.date} item lg={3} sm={6} xl={3} xs={12} m={2}>
+        {/* <Grid className={classes.date} item lg={3} sm={6} xl={3} xs={12} m={2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container justify="space-around">
               <KeyboardDatePicker
@@ -169,7 +147,7 @@ const Toolbar = (props) => {
             min={0}
             max={2000}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );

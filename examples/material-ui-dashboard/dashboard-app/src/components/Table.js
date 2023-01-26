@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -7,8 +6,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import { useCubeQuery } from '@cubejs-client/react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   Card,
@@ -70,22 +67,15 @@ const useStyles = makeStyles((theme) => ({
 const statusColors = {
   completed: 'success',
   processing: 'info',
-  shipped: 'danger',
+  // shipped: 'danger',
 };
 
 const TableComponent = (props) => {
-  const history = useHistory();
-
-  function handleClick(str) {
-    history.push(str);
-  }
 
   const {
     className,
     sorting,
     setSorting,
-    query,
-    countQuery,
     rowsPerPage,
     page,
     setRowsPerPage,
@@ -97,67 +87,75 @@ const TableComponent = (props) => {
 
   const tableHeaders = [
     {
-      text: 'Order id',
-      value: 'Orders.id',
+      text: 'Task ID',
+      value: 'taskID',
     },
     {
-      text: 'Orders size',
-      value: 'Orders.size',
+      text: 'Task',
+      value: 'task',
     },
     {
-      text: 'Full Name',
-      value: 'Users.fullName',
-    },
-    {
-      text: 'User city',
-      value: 'Users.city',
-    },
-    {
-      text: 'Order price',
-      value: 'Orders.price',
+      text: 'Product',
+      value: 'product',
     },
     {
       text: 'Status',
-      value: 'Orders.status',
+      value: 'status',
+    },
+    {
+      text: 'Created by',
+      value: 'createdBy',
     },
     {
       text: 'Created at',
-      value: 'Orders.createdAt',
+      value: 'createdAt',
     },
   ];
-  const load = useCubeQuery(query);
-  const count = useCubeQuery(countQuery);
-  if (load.isLoading || count.isLoading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: `${124 + rowsPerPage * 54}px`,
-          background: '#fff',
-          borderRadius: '5px',
-        }}
-      >
-        <CircularProgress color="secondary" />
-      </div>
-    );
-  }
-  if (load.error || count.error) {
-    return <pre>{load.error.toString()}</pre>;
-  }
-  if (!load.resultSet || !count.resultSet) {
-    return null;
-  }
-  if (load.resultSet && count.resultSet) {
-    let orders = load.resultSet.tablePivot();
+    const tasks = [
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+      {
+        taskID: 196745,
+        task: 'Upload',
+        product: 'Chase Mobile',
+        status: 'Processing',
+        createdBy: 'John Doe'
+      },
+    ];
 
-    const handlePageChange = (event, page) => {
-      setPage(page);
-    };
-    const handleRowsPerPageChange = (event) => {
-      setRowsPerPage(event.target.value);
-    };
     const handleSetSorting = (str) => {
       setSorting([str, sorting[1] === 'desc' ? 'asc' : 'desc']);
     };
@@ -170,9 +168,9 @@ const TableComponent = (props) => {
               <Table>
                 <TableHead className={classes.head}>
                   <TableRow>
-                    {tableHeaders.map((item) => (
+                    {tableHeaders.map((item, index) => (
                       <TableCell
-                        key={item.value + Math.random()}
+                        key={index}
                         className={classes.hoverable}
                         onClick={() => {
                           handleSetSorting(`${item.value}`);
@@ -193,31 +191,22 @@ const TableComponent = (props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {orders.map((obj) => (
+                  {tasks.map((task, index) => (
                     <TableRow
-                      className={classes.tableRow}
+                      // className={classes.tableRow}
                       hover
-                      key={obj['Orders.id']}
+                      key={index}
+                      sx={{ borderBottom: 100, borderColor: 'primary.main'}}
                     >
-                      <TableCell>{obj['Orders.id']}</TableCell>
-                      <TableCell>{obj['Orders.size']}</TableCell>
-                      <TableCell
-                        className={classes.hoverable}
-                        onClick={() => handleClick(`/user/${obj['Users.id']}`)}
-                      >
-                        {obj['Users.fullName']}
-                        &nbsp;
-                        <Typography className={classes.arrow} variant="body2" component="span">
-                          <OpenInNewIcon fontSize="small" />
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{obj['Users.city']}</TableCell>
-                      <TableCell>{'$ ' + obj['Orders.price']}</TableCell>
+                      <TableCell>{task['taskID']}</TableCell>
+                      <TableCell>{task['task']}</TableCell>
+                      <TableCell>{task['product']}</TableCell>
                       <TableCell>
-                        <StatusBullet className={classes.status} color={statusColors[obj['Orders.status']]} size="sm" />
-                        {obj['Orders.status']}
+                        <StatusBullet className={classes.status} color={statusColors[task['status'].toLowerCase()]} size="sm" />
+                        {task['status']}
                       </TableCell>
-                      <TableCell>{moment(obj['Orders.createdAt']).format('DD/MM/YYYY')}</TableCell>
+                      <TableCell>{task['createdBy']}</TableCell>
+                      <TableCell>{moment(task['createdAt']).format('DD/MM/YYYY')}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -228,9 +217,10 @@ const TableComponent = (props) => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={parseInt(count.resultSet.tablePivot()[0]['Orders.count'])}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handleRowsPerPageChange}
+            count={10}
+            // count={parseInt(count.resultSet.tablePivot()[0]['Orders.count'])}
+            // onChangePage={handlePageChange}
+            // onChangeRowsPerPage={handleRowsPerPageChange}
             page={page}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[5, 10, 25, 50, 100]}
@@ -239,7 +229,7 @@ const TableComponent = (props) => {
       </Card>
     );
   }
-};
+// };
 
 TableComponent.propTypes = {
   className: PropTypes.string,
